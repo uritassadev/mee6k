@@ -11,7 +11,13 @@ fi
 # Start services
 echo "🐳 Starting Docker services..."
 cd docker-compose
-docker-compose up -d
+
+# Use docker compose (v2) or docker-compose (v1)
+if command -v docker-compose &> /dev/null; then
+    docker-compose up -d
+else
+    docker compose up -d
+fi
 
 echo "⏳ Waiting for services to be ready..."
 sleep 30
