@@ -12,7 +12,12 @@ fi
 echo "🐳 Starting Docker services..."
 cd docker-compose
 
-docker compose up -d
+# Try docker compose (v2) first, fallback to docker-compose (v1)
+if docker compose version &> /dev/null 2>&1; then
+    docker compose up -d
+else
+    docker-compose up -d
+fi
 
 echo "⏳ Waiting for services to be ready..."
 sleep 30

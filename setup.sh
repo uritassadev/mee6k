@@ -22,8 +22,8 @@ if ! command -v docker &> /dev/null; then
     exit 1
 fi
 
-# Check if Docker Compose is installed
-if ! docker compose version &> /dev/null; then
+# Check if Docker Compose is installed (v1 or v2)
+if ! docker compose version &> /dev/null 2>&1 && ! command -v docker-compose &> /dev/null; then
     echo -e "${RED}❌ Docker Compose is not installed. Please install Docker Compose first.${NC}"
     exit 1
 fi
