@@ -19,13 +19,5 @@ if [ $# -eq 0 ]; then
     echo "Usage: ./logs.sh <service-name>"
     echo "Example: ./logs.sh api-gateway"
 else
-    # Use docker compose (v2) or docker-compose (v1)
-    if docker compose version &> /dev/null; then
-        docker compose logs -f $1
-    elif command -v docker-compose &> /dev/null; then
-        docker-compose logs -f $1
-    else
-        echo "❌ Docker Compose not found"
-        exit 1
-    fi
+    docker compose logs -f $1
 fi

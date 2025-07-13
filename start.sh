@@ -12,15 +12,7 @@ fi
 echo "🐳 Starting Docker services..."
 cd docker-compose
 
-# Use docker compose (v2) or docker-compose (v1)
-if docker compose version &> /dev/null; then
-    docker compose up -d
-elif command -v docker-compose &> /dev/null; then
-    docker-compose up -d
-else
-    echo "❌ Docker Compose not found"
-    exit 1
-fi
+docker compose up -d
 
 echo "⏳ Waiting for services to be ready..."
 sleep 30
