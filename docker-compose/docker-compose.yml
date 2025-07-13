@@ -56,9 +56,13 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - postgres
-      - redis
-      - rabbitmq
+      postgres:
+        condition: service_started
+      redis:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+    restart: on-failure
     networks:
       - meeseecs-network
 

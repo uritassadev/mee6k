@@ -4,8 +4,9 @@
 -- Create extensions
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- Insert sample security policies
-INSERT INTO security_policies (name, description, enabled, severity, rules, created_at, updated_at) VALUES
+-- Wait for tables to be created by GORM, then insert sample data
+-- This will be handled by the application startup
+-- INSERT INTO security_policies (name, description, enabled, severity, rules, created_at, updated_at) VALUES
 ('Suspicious Process Execution', 'Detect execution of suspicious processes in containers', true, 'HIGH', 
  '{"processes": ["nc", "ncat", "netcat", "nmap", "wget", "curl"], "action": "alert"}', NOW(), NOW()),
 
