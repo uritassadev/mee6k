@@ -41,13 +41,8 @@ chmod 755 data/{postgres,redis,rabbitmq}
 
 echo -e "${GREEN}✅ Directories created successfully${NC}"
 
-# Build API Gateway
-echo -e "${PURPLE}🔨 Building API Gateway...${NC}"
-cd api-gateway
-if [ ! -f "go.sum" ]; then
-    go mod tidy
-fi
-cd ..
+# Skip Go build - will be handled by Docker
+echo -e "${PURPLE}🔨 API Gateway ready for Docker build...${NC}"
 
 echo -e "${GREEN}✅ API Gateway ready${NC}"
 

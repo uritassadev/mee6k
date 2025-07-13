@@ -112,8 +112,7 @@
 
 ### Prerequisites
 - Docker and Docker Compose
-- Go 1.21+ (for development)
-- Node.js 18+ (for dashboard development)
+- Linux/macOS/Windows with Docker support
 
 ### Quick Start
 ```bash
