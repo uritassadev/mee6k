@@ -13,10 +13,13 @@ echo "🐳 Starting Docker services..."
 cd docker-compose
 
 # Use docker compose (v2) or docker-compose (v1)
-if command -v docker-compose &> /dev/null; then
+if docker compose version &> /dev/null; then
+    docker compose up -d
+elif command -v docker-compose &> /dev/null; then
     docker-compose up -d
 else
-    docker compose up -d
+    echo "❌ Docker Compose not found"
+    exit 1
 fi
 
 echo "⏳ Waiting for services to be ready..."

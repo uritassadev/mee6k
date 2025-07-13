@@ -20,9 +20,12 @@ if [ $# -eq 0 ]; then
     echo "Example: ./logs.sh api-gateway"
 else
     # Use docker compose (v2) or docker-compose (v1)
-    if command -v docker-compose &> /dev/null; then
+    if docker compose version &> /dev/null; then
+        docker compose logs -f $1
+    elif command -v docker-compose &> /dev/null; then
         docker-compose logs -f $1
     else
-        docker compose logs -f $1
+        echo "❌ Docker Compose not found"
+        exit 1
     fi
 fi
