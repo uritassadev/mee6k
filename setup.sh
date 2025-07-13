@@ -146,7 +146,7 @@ else
 fi
 
 echo "⏳ Waiting for services to be ready..."
-sleep 30
+sleep 60
 
 # Check service health
 echo "🔍 Checking service health..."
@@ -303,10 +303,10 @@ test_endpoint "GET" "/api/v1/dashboard/stats" "Dashboard Statistics"
 test_endpoint "GET" "/api/v1/dashboard/overview" "Security Overview"
 test_endpoint "GET" "/api/v1/runtime/alerts" "Runtime Alerts"
 test_endpoint "GET" "/api/v1/runtime/policies" "Security Policies"
-test_endpoint "GET" "/api/v1/vulnerabilities" "Vulnerabilities"
+test_endpoint "GET" "/api/v1/vulnerabilities/" "Vulnerabilities"
 test_endpoint "GET" "/api/v1/vulnerabilities/summary" "Vulnerability Summary"
 test_endpoint "GET" "/api/v1/vulnerabilities/reports" "Vulnerability Reports"
-test_endpoint "GET" "/api/v1/alerts" "All Alerts"
+test_endpoint "GET" "/api/v1/alerts/" "All Alerts"
 test_endpoint "GET" "/api/v1/alerts/channels" "Alert Channels"
 test_endpoint "GET" "/api/v1/settings/notifications" "Notification Settings"
 
