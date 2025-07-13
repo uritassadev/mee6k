@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    volumes:
+      - ../logs:/app/logs
+    environment:
+      - GIN_MODE=debug
+      - LOG_LEVEL=debug
+    
+  postgres:
+    volumes:
+      - ../data/postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    
+  redis:
+    volumes:
+      - ../data/redis:/data
+    ports:
+      - "6379:6379"
+    
+  rabbitmq:
+    volumes:
+      - ../data/rabbitmq:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
