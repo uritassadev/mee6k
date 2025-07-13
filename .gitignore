@@ -4,7 +4,7 @@ data/
 *.log
 
 # Go build artifacts
-api-gateway/go.sum
+go.sum
 *.exe
 *.exe~
 *.dll
