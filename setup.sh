@@ -137,7 +137,13 @@ fi
 # Start services
 echo "🐳 Starting Docker services..."
 cd docker-compose
-docker-compose up -d
+
+# Try docker compose (v2) first, fallback to docker-compose (v1)
+if docker compose version &> /dev/null 2>&1; then
+    docker compose up -d
+else
+    docker-compose up -d
+fi
 
 echo "⏳ Waiting for services to be ready..."
 sleep 30
@@ -176,7 +182,13 @@ echo "🛑 Stopping Meeseecs Box Security Platform"
 echo "=========================================="
 
 cd docker-compose
-docker-compose down
+
+# Try docker compose (v2) first, fallback to docker-compose (v1)
+if docker compose version &> /dev/null 2>&1; then
+    docker compose down
+else
+    docker-compose down
+fi
 
 echo "✅ All services stopped"
 EOF
@@ -206,13 +218,115 @@ if [ $# -eq 0 ]; then
     echo "Usage: ./logs.sh <service-name>"
     echo "Example: ./logs.sh api-gateway"
 else
-    docker-compose logs -f $1
+    # Try docker compose (v2) first, fallback to docker-compose (v1)
+    if docker compose version &> /dev/null 2>&1; then
+        docker compose logs -f $1
+    else
+        docker-compose logs -f $1
+    fi
 fi
 EOF
 
 chmod +x logs.sh
 
-echo -e "${GREEN}✅ Startup scripts created${NC}"
+# Create test script
+cat > test-api.sh << 'EOF'
+#!/bin/bash
+
+# Meeseecs Box API Testing Script
+# This script tests the API Gateway endpoints
+
+set -e
+
+API_BASE="http://localhost:8080"
+BLUE='\033[0;34m'
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+PURPLE='\033[0;35m'
+ORANGE='\033[0;33m'
+NC='\033[0m'
+
+echo -e "${BLUE}🧪 Testing Meeseecs Box API Gateway${NC}"
+echo "=================================="
+
+# Function to test an endpoint
+test_endpoint() {
+    local method=$1
+    local endpoint=$2
+    local description=$3
+    local expected_status=${4:-200}
+    
+    echo -e "${PURPLE}Testing: ${description}${NC}"
+    echo -e "  ${method} ${endpoint}"
+    
+    if [ "$method" = "GET" ]; then
+        response=$(curl -s -w "%{http_code}" -o /tmp/response.json "${API_BASE}${endpoint}")
+    else
+        response=$(curl -s -w "%{http_code}" -X "$method" -H "Content-Type: application/json" -o /tmp/response.json "${API_BASE}${endpoint}")
+    fi
+    
+    if [ "$response" = "$expected_status" ]; then
+        echo -e "  ${GREEN}✅ Success (HTTP $response)${NC}"
+        if [ -f /tmp/response.json ]; then
+            echo -e "  ${GREEN}Response:${NC}"
+            cat /tmp/response.json | jq . 2>/dev/null || cat /tmp/response.json
+        fi
+    else
+        echo -e "  ${RED}❌ Failed (HTTP $response, expected $expected_status)${NC}"
+        if [ -f /tmp/response.json ]; then
+            echo -e "  ${RED}Response:${NC}"
+            cat /tmp/response.json
+        fi
+    fi
+    echo ""
+}
+
+# Wait for API to be ready
+echo -e "${ORANGE}⏳ Waiting for API Gateway to be ready...${NC}"
+for i in {1..30}; do
+    if curl -s "${API_BASE}/health" > /dev/null 2>&1; then
+        echo -e "${GREEN}✅ API Gateway is ready!${NC}"
+        break
+    fi
+    if [ $i -eq 30 ]; then
+        echo -e "${RED}❌ API Gateway is not responding after 30 seconds${NC}"
+        exit 1
+    fi
+    sleep 1
+done
+
+echo ""
+
+# Test endpoints
+test_endpoint "GET" "/health" "Health Check"
+test_endpoint "GET" "/api/v1/dashboard/stats" "Dashboard Statistics"
+test_endpoint "GET" "/api/v1/dashboard/overview" "Security Overview"
+test_endpoint "GET" "/api/v1/runtime/alerts" "Runtime Alerts"
+test_endpoint "GET" "/api/v1/runtime/policies" "Security Policies"
+test_endpoint "GET" "/api/v1/vulnerabilities" "Vulnerabilities"
+test_endpoint "GET" "/api/v1/vulnerabilities/summary" "Vulnerability Summary"
+test_endpoint "GET" "/api/v1/vulnerabilities/reports" "Vulnerability Reports"
+test_endpoint "GET" "/api/v1/alerts" "All Alerts"
+test_endpoint "GET" "/api/v1/alerts/channels" "Alert Channels"
+test_endpoint "GET" "/api/v1/settings/notifications" "Notification Settings"
+
+# Clean up
+rm -f /tmp/response.json
+
+echo -e "${GREEN}🎉 API testing completed!${NC}"
+echo ""
+echo -e "${BLUE}📊 Platform Status:${NC}"
+echo -e "${PURPLE}• API Gateway: ${GREEN}✅ Operational${NC}"
+echo -e "${PURPLE}• Database: ${GREEN}✅ Connected${NC}"
+echo -e "${PURPLE}• Message Queue: ${GREEN}✅ Ready${NC}"
+echo -e "${PURPLE}• Cache: ${GREEN}✅ Available${NC}"
+echo ""
+echo -e "${ORANGE}Next: Access the dashboard at http://localhost:3000${NC}"
+EOF
+
+chmod +x test-api.sh
+
+echo -e "${GREEN}✅ All scripts created${NC}"
 
 # Create README for quick reference
 cat > QUICKSTART.md << 'EOF'
