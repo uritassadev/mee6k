@@ -63,6 +63,48 @@ services:
     networks:
       - meeseecs-network
 
+  # Meeseecs-box Services
+  runtime-guardian:
+    build:
+      context: ../runtime-guardian
+      dockerfile: Dockerfile
+    container_name: meeseecs-runtime-guardian
+    privileged: true
+    environment:
+      - API_GATEWAY_URL=http://api-gateway:8080
+      - RABBITMQ_URL=amqp://meeseecs:rabbitmq_password_123@rabbitmq:5672/
+    ports:
+      - "8081:8081"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+    depends_on:
+      - api-gateway
+      - rabbitmq
+    restart: unless-stopped
+    networks:
+      - meeseecs-network
+
+  vuln-scanner:
+    build:
+      context: ../vuln-scanner
+      dockerfile: Dockerfile
+    container_name: meeseecs-vuln-scanner
+    environment:
+      - API_GATEWAY_URL=http://api-gateway:8080
+      - RABBITMQ_URL=amqp://meeseecs:rabbitmq_password_123@rabbitmq:5672/
+    ports:
+      - "8082:8082"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - api-gateway
+      - rabbitmq
+    restart: unless-stopped
+    networks:
+      - meeseecs-network
+
 volumes:
   postgres_data:
   redis_data:

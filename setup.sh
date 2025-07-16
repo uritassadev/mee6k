@@ -310,6 +310,24 @@ test_endpoint "GET" "/api/v1/alerts/" "All Alerts"
 test_endpoint "GET" "/api/v1/alerts/channels" "Alert Channels"
 test_endpoint "GET" "/api/v1/settings/notifications" "Notification Settings"
 
+echo ""
+echo -e "${BLUE}🛡️ Testing Phase 2 Services${NC}"
+echo "=============================="
+
+# Test Runtime Guardian
+echo -e "${PURPLE}Testing Runtime Guardian (Port 8081)${NC}"
+test_endpoint "GET" "http://localhost:8081/health" "Runtime Guardian Health" 200
+test_endpoint "GET" "http://localhost:8081/api/v1/events" "Runtime Events" 200
+test_endpoint "GET" "http://localhost:8081/api/v1/policies" "Security Policies" 200
+test_endpoint "GET" "http://localhost:8081/api/v1/status" "Runtime Status" 200
+
+# Test Vulnerability Scanner
+echo -e "${PURPLE}Testing Vulnerability Scanner (Port 8082)${NC}"
+test_endpoint "GET" "http://localhost:8082/health" "Vuln Scanner Health" 200
+test_endpoint "GET" "http://localhost:8082/api/v1/scans" "Scan Results" 200
+test_endpoint "GET" "http://localhost:8082/api/v1/vulnerabilities" "Vulnerabilities" 200
+test_endpoint "GET" "http://localhost:8082/api/v1/status" "Scanner Status" 200
+
 # Clean up
 rm -f /tmp/response.json
 
