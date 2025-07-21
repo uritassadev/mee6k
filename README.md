@@ -74,7 +74,7 @@ Meeseecs Box is a comprehensive security platform that provides real-time runtim
 ```bash
 # Clone and setup
 git clone <repo-url>
-cd meeseecs-box
+cd meeseecs-box/docker
 
 # Start the platform
 docker-compose up -d

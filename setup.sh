@@ -33,7 +33,7 @@ echo "-----------------------------------"
 
 # Create necessary directories
 echo -e "${PURPLE}📁 Creating project directories...${NC}"
-mkdir -p {logs,data/{postgres,redis,rabbitmq}}
+mkdir -p {logs,data/{postgres,redis,rabbitmq},deploy/docker}
 
 # Set permissions
 chmod 755 logs
@@ -88,7 +88,7 @@ echo -e "${GREEN}✅ Environment configuration created${NC}"
 
 # Create docker-compose override for development
 echo -e "${PURPLE}🐳 Creating Docker Compose configuration...${NC}"
-cat > docker-compose/docker-compose.override.yml << EOF
+cat > deploy/docker/docker-compose.override.yml << EOF
 version: '3.8'
 
 services:
@@ -136,7 +136,7 @@ fi
 
 # Start services
 echo "🐳 Starting Docker services..."
-cd docker-compose
+cd deploy/docker
 
 # Try docker compose (v2) first, fallback to docker-compose (v1)
 if docker compose version &> /dev/null 2>&1; then
@@ -181,7 +181,7 @@ cat > stop.sh << 'EOF'
 echo "🛑 Stopping Meeseecs Box Security Platform"
 echo "=========================================="
 
-cd docker-compose
+cd deploy/docker
 
 # Try docker compose (v2) first, fallback to docker-compose (v1)
 if docker compose version &> /dev/null 2>&1; then
@@ -202,7 +202,7 @@ cat > logs.sh << 'EOF'
 echo "📋 Meeseecs Box Service Logs"
 echo "============================"
 
-cd docker-compose
+cd deploy/docker
 
 if [ $# -eq 0 ]; then
     echo "Available services:"
