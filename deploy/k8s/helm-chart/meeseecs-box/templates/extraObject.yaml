@@ -1,0 +1,9 @@
+{{/*
+Render a list of extra objects from .Values.extraObject
+*/}}
+{{- if .Values.extraObject }}
+{{- range .Values.extraObject }}
+---
+{{- tpl (toYaml .) $ | nindent 0 }}
+{{- end }}
+{{- end }}
