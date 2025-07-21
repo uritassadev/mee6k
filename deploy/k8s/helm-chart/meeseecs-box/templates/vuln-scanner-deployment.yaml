@@ -1,16 +1,17 @@
+{{- if .Values.vulnScanner.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "meeseecs-box.fullname" . }}
+  name: {{ include "meeseecs-box.fullname" . }}-vuln-scanner
   labels:
     {{- include "meeseecs-box.labels" . | nindent 4 }}
+    app.kubernetes.io/component: vuln-scanner
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
-  {{- end }}
+  replicas: {{ .Values.vulnScanner.replicaCount }}
   selector:
     matchLabels:
       {{- include "meeseecs-box.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: vuln-scanner
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,49 +19,53 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "meeseecs-box.labels" . | nindent 8 }}
+        {{- include "meeseecs-box.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: vuln-scanner
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       serviceAccountName: {{ include "meeseecs-box.serviceAccountName" . }}
       {{- with .Values.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: vuln-scanner
           {{- with .Values.securityContext }}
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ .Values.vulnScanner.image.repository }}:{{ .Values.vulnScanner.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.vulnScanner.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ .Values.vulnScanner.service.port }}
               protocol: TCP
-          {{- with .Values.livenessProbe }}
+          {{- with .Values.vulnScanner.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.readinessProbe }}
+          {{- with .Values.vulnScanner.readinessProbe }}
           readinessProbe:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.resources }}
+          env:
+            - name: RABBITMQ_URL
+              value: {{ .Values.global.env.RABBITMQ_URL }}
+            {{- range $key, $value := .Values.vulnScanner.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          {{- with .Values.vulnScanner.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.volumeMounts }}
+          {{- with .Values.vulnScanner.volumeMounts }}
           volumeMounts:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-      {{- with .Values.volumes }}
+      {{- with .Values.vulnScanner.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -76,3 +81,4 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+{{- end }}

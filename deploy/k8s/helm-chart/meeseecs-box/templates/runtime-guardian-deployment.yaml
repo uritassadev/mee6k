@@ -1,0 +1,84 @@
+{{- if .Values.runtimeGuardian.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "meeseecs-box.fullname" . }}-runtime-guardian
+  labels:
+    {{- include "meeseecs-box.labels" . | nindent 4 }}
+    app.kubernetes.io/component: runtime-guardian
+spec:
+  replicas: {{ .Values.runtimeGuardian.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "meeseecs-box.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: runtime-guardian
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "meeseecs-box.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: runtime-guardian
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ include "meeseecs-box.serviceAccountName" . }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: runtime-guardian
+          {{- with .Values.runtimeGuardian.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.runtimeGuardian.image.repository }}:{{ .Values.runtimeGuardian.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.runtimeGuardian.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.runtimeGuardian.service.port }}
+              protocol: TCP
+          {{- with .Values.runtimeGuardian.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.runtimeGuardian.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          env:
+            - name: RABBITMQ_URL
+              value: {{ .Values.global.env.RABBITMQ_URL }}
+            {{- range $key, $value := .Values.runtimeGuardian.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          {{- with .Values.runtimeGuardian.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.runtimeGuardian.volumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.runtimeGuardian.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
