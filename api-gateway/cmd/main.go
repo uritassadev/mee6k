@@ -4,8 +4,8 @@ import (
 	"log"
 	"os"
 
-	"meeseecs-box/api-gateway/internal/handlers"
-	"meeseecs-box/api-gateway/internal/services"
+	"mee6k-box/api-gateway/internal/handlers"
+	"mee6k-box/api-gateway/internal/services"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -105,6 +105,6 @@ func main() {
 		port = "8080"
 	}
 
-	log.Printf("🚀 Meeseecs Box API Gateway starting on port %s", port)
+	log.Printf("🚀 MEE6K Box API Gateway starting on port %s", port)
 	log.Fatal(r.Run(":" + port))
 }

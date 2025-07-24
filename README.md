@@ -1,8 +1,8 @@
-# Meeseecs Box 🛡️
+# MEE6K Box 🛡️
 
 **The Ultimate Container Security Platform**
 
-Meeseecs Box is a comprehensive security platform that provides real-time runtime protection and vulnerability management for containerized environments.
+MEE6K Box is a comprehensive security platform that provides real-time runtime protection and vulnerability management for containerized environments.
 
 ## 🎨 Platform Design
 - **Primary Colors**: Blue (#2563eb), Purple (#7c3aed), Orange (#ea580c)
@@ -21,7 +21,7 @@ Meeseecs Box is a comprehensive security platform that provides real-time runtim
          └───────────────────────┼───────────────────────┘
                                  │
                     ┌─────────────────┐
-                    │ Meeseecs Box    │
+                    │ MEE6K Box    │
                     │ Dashboard       │
                     └─────────────────┘
 ```
@@ -74,7 +74,7 @@ Meeseecs Box is a comprehensive security platform that provides real-time runtim
 ```bash
 # Clone and setup
 git clone <repo-url>
-cd meeseecs-box/docker
+cd mee6k-box/docker
 
 # Start the platform
 docker-compose up -d

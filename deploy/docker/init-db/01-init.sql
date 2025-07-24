@@ -1,4 +1,4 @@
--- Meeseecs Box Database Initialization
+-- MEE6K Box Database Initialization
 -- This script sets up the initial database structure and sample data
 
 -- Create extensions

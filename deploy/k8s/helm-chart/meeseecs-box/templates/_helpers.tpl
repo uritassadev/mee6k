@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "meeseecs-box.name" -}}
+{{- define "mee6k-box.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "meeseecs-box.fullname" -}}
+{{- define "mee6k-box.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "meeseecs-box.chart" -}}
+{{- define "mee6k-box.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "meeseecs-box.labels" -}}
-helm.sh/chart: {{ include "meeseecs-box.chart" . }}
-{{ include "meeseecs-box.selectorLabels" . }}
+{{- define "mee6k-box.labels" -}}
+helm.sh/chart: {{ include "mee6k-box.chart" . }}
+{{ include "mee6k-box.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "meeseecs-box.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "meeseecs-box.name" . }}
+{{- define "mee6k-box.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "mee6k-box.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "meeseecs-box.serviceAccountName" -}}
+{{- define "mee6k-box.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "meeseecs-box.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "mee6k-box.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}

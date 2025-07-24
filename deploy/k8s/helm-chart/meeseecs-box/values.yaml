@@ -1,4 +1,4 @@
-# Default values for meeseecs-box.
+# Default values for mee6k-box.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -7,11 +7,11 @@ global:
   # Environment variables shared across all services
   env:
     # Database connection settings
-    DATABASE_URL: "postgres://meeseecs:secure_password_123@{{ .Release.Name }}-postgresql:5432/meeseecs_box"
+    DATABASE_URL: "postgres://mee6k:secure_password_123@{{ .Release.Name }}-postgresql:5432/mee6k_box"
     # Redis connection settings
     REDIS_URL: "redis://:redis_password_123@{{ .Release.Name }}-redis-master:6379"
     # RabbitMQ connection settings
-    RABBITMQ_URL: "amqp://meeseecs:rabbitmq_password_123@{{ .Release.Name }}-rabbitmq:5672/"
+    RABBITMQ_URL: "amqp://mee6k:rabbitmq_password_123@{{ .Release.Name }}-rabbitmq:5672/"
 
 # This is to override the chart name.
 nameOverride: ""
@@ -54,23 +54,23 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: meeseecs-box.local
+    - host: mee6k-box.local
       paths:
         - path: /
           pathType: ImplementationSpecific
           service: api-gateway
           port: 8080
   tls: []
-  #  - secretName: meeseecs-box-tls
+  #  - secretName: mee6k-box-tls
   #    hosts:
-  #      - meeseecs-box.local
+  #      - mee6k-box.local
 
 # API Gateway Service Configuration
 apiGateway:
   enabled: true
   replicaCount: 1
   image:
-    repository: "meeseecs-box/api-gateway"
+    repository: "mee6k-box/api-gateway"
     pullPolicy: IfNotPresent
     tag: "latest"
   service:
@@ -103,7 +103,7 @@ runtimeGuardian:
   enabled: true
   replicaCount: 1
   image:
-    repository: "meeseecs-box/runtime-guardian"
+    repository: "mee6k-box/runtime-guardian"
     pullPolicy: IfNotPresent
     tag: "latest"
   service:
@@ -157,7 +157,7 @@ vulnScanner:
   enabled: true
   replicaCount: 1
   image:
-    repository: "meeseecs-box/vuln-scanner"
+    repository: "mee6k-box/vuln-scanner"
     pullPolicy: IfNotPresent
     tag: "latest"
   service:
@@ -193,9 +193,9 @@ vulnScanner:
 postgresql:
   enabled: true
   auth:
-    username: "meeseecs"
+    username: "mee6k"
     password: "secure_password_123"
-    database: "meeseecs_box"
+    database: "mee6k_box"
   primary:
     initdb:
       scriptsConfigMap: "{{ .Release.Name }}-postgresql-init"
@@ -217,7 +217,7 @@ redis:
 rabbitmq:
   enabled: true
   auth:
-    username: "meeseecs"
+    username: "mee6k"
     password: "rabbitmq_password_123"
   persistence:
     enabled: true

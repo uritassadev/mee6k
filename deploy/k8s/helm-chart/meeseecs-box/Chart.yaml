@@ -1,6 +1,6 @@
 apiVersion: v2
-name: meeseecs-box
-description: A Helm chart for Meeseecs Box application
+name: mee6k-box
+description: A Helm chart for MEE6K Box application
 
 # A chart can be either an 'application' or a 'library' chart.
 #

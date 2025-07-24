@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"meeseecs-box/api-gateway/internal/models"
+	"mee6k-box/api-gateway/internal/models"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -18,7 +18,7 @@ type DatabaseService struct {
 func NewDatabaseService() (*DatabaseService, error) {
 	dbURL := os.Getenv("DATABASE_URL")
 	if dbURL == "" {
-		dbURL = "postgres://meeseecs:secure_password_123@localhost:5432/meeseecs_box?sslmode=disable"
+		dbURL = "postgres://mee6k:secure_password_123@localhost:5432/mee6k_box?sslmode=disable"
 	}
 
 	db, err := gorm.Open(postgres.Open(dbURL), &gorm.Config{

@@ -1,8 +1,8 @@
-# Meeseecs Box - Phase 2 Complete
+# MEE6K Box - Phase 2 Complete
 
 ## 🚀 Phase 2: Runtime Guardian & Vulnerability Scanner
 
-Phase 2 of the Meeseecs Box security platform adds two critical security components:
+Phase 2 of the MEE6K Box security platform adds two critical security components:
 
 ### 🛡️ Runtime Guardian (Port 8081)
 - Real-time container monitoring based on Falco patterns
@@ -21,7 +21,7 @@ Phase 2 of the Meeseecs Box security platform adds two critical security compone
 ## 📊 Architecture
 
 ```
-Meeseecs Box Platform
+MEE6K Box Platform
 ├── API Gateway (8080)     ✅ Phase 1
 ├── Runtime Guardian (8081) ✅ Phase 2  
 ├── Vuln Scanner (8082)    ✅ Phase 2

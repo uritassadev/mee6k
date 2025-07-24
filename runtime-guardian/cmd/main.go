@@ -60,7 +60,7 @@ func main() {
 	// Health check endpoint
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
-			"service":   "meeseecs-runtime-guardian",
+			"service":   "mee6k-runtime-guardian",
 			"status":    "healthy",
 			"timestamp": time.Now().UTC(),
 			"version":   "1.0.0",
@@ -85,7 +85,7 @@ func main() {
 }
 
 func (rg *RuntimeGuardian) initRabbitMQ() error {
-	rabbitmqURL := getEnv("RABBITMQ_URL", "amqp://meeseecs:rabbitmq_password_123@rabbitmq:5672/")
+	rabbitmqURL := getEnv("RABBITMQ_URL", "amqp://mee6k:rabbitmq_password_123@rabbitmq:5672/")
 	
 	conn, err := amqp.Dial(rabbitmqURL)
 	if err != nil {

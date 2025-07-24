@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Meeseecs Box Setup Script
-# This script sets up the complete Meeseecs Box security platform
+# MEE6K Box Setup Script
+# This script sets up the complete MEE6K Box security platform
 
 set -e
 
-echo "🛡️  Setting up Meeseecs Box Security Platform"
+echo "🛡️  Setting up MEE6K Box Security Platform"
 echo "=============================================="
 
 # Colors for output
@@ -49,19 +49,19 @@ echo -e "${GREEN}✅ API Gateway ready${NC}"
 # Create environment file
 echo -e "${PURPLE}⚙️  Creating environment configuration...${NC}"
 cat > .env << EOF
-# Meeseecs Box Configuration
-COMPOSE_PROJECT_NAME=meeseecs-box
+# MEE6K Box Configuration
+COMPOSE_PROJECT_NAME=mee6k-box
 
 # Database Configuration
-POSTGRES_DB=meeseecs_box
-POSTGRES_USER=meeseecs
+POSTGRES_DB=mee6k_box
+POSTGRES_USER=mee6k
 POSTGRES_PASSWORD=secure_password_123
 
 # Redis Configuration
 REDIS_PASSWORD=redis_password_123
 
 # RabbitMQ Configuration
-RABBITMQ_DEFAULT_USER=meeseecs
+RABBITMQ_DEFAULT_USER=mee6k
 RABBITMQ_DEFAULT_PASS=rabbitmq_password_123
 
 # API Gateway Configuration
@@ -69,17 +69,17 @@ API_GATEWAY_PORT=8080
 DASHBOARD_PORT=3000
 
 # Security Configuration
-JWT_SECRET=meeseecs_box_jwt_secret_key_2024
-ENCRYPTION_KEY=meeseecs_box_encryption_key_32_chars
+JWT_SECRET=mee6k_box_jwt_secret_key_2024
+ENCRYPTION_KEY=mee6k_box_encryption_key_32_chars
 
 # Notification Configuration
 SMTP_HOST=smtp.example.com
 SMTP_PORT=587
-SMTP_USERNAME=alerts@meeseecs.com
+SMTP_USERNAME=alerts@mee6k.com
 SMTP_PASSWORD=your_smtp_password
 
 # Platform Branding
-PLATFORM_NAME=Meeseecs Box
+PLATFORM_NAME=mee6k Box
 PLATFORM_VERSION=1.0.0
 PLATFORM_COLORS=blue,purple,orange
 EOF
@@ -126,7 +126,7 @@ echo -e "${PURPLE}🚀 Creating startup scripts...${NC}"
 cat > start.sh << 'EOF'
 #!/bin/bash
 
-echo "🛡️  Starting Meeseecs Box Security Platform"
+echo "🛡️  Starting mee6k Box Security Platform"
 echo "==========================================="
 
 # Load environment variables
@@ -162,13 +162,13 @@ for service in "${services[@]}"; do
 done
 
 echo ""
-echo "🎉 Meeseecs Box is starting up!"
+echo "🎉 mee6k Box is starting up!"
 echo "📊 Dashboard: http://localhost:3000"
 echo "🔌 API Gateway: http://localhost:8080"
 echo "🐰 RabbitMQ Management: http://localhost:15672"
 echo ""
 echo "Default credentials:"
-echo "  RabbitMQ: meeseecs / rabbitmq_password_123"
+echo "  RabbitMQ: mee6k / rabbitmq_password_123"
 echo ""
 EOF
 
@@ -178,7 +178,7 @@ chmod +x start.sh
 cat > stop.sh << 'EOF'
 #!/bin/bash
 
-echo "🛑 Stopping Meeseecs Box Security Platform"
+echo "🛑 Stopping mee6k Box Security Platform"
 echo "=========================================="
 
 cd deploy/docker
@@ -199,7 +199,7 @@ chmod +x stop.sh
 cat > logs.sh << 'EOF'
 #!/bin/bash
 
-echo "📋 Meeseecs Box Service Logs"
+echo "📋 mee6k Box Service Logs"
 echo "============================"
 
 cd deploy/docker
@@ -233,7 +233,7 @@ chmod +x logs.sh
 cat > test-api.sh << 'EOF'
 #!/bin/bash
 
-# Meeseecs Box API Testing Script
+# mee6k Box API Testing Script
 # This script tests the API Gateway endpoints
 
 set -e
@@ -246,7 +246,7 @@ PURPLE='\033[0;35m'
 ORANGE='\033[0;33m'
 NC='\033[0m'
 
-echo -e "${BLUE}🧪 Testing Meeseecs Box API Gateway${NC}"
+echo -e "${BLUE}🧪 Testing mee6k Box API Gateway${NC}"
 echo "=================================="
 
 # Function to test an endpoint
@@ -348,7 +348,7 @@ echo -e "${GREEN}✅ All scripts created${NC}"
 
 # Create README for quick reference
 cat > QUICKSTART.md << 'EOF'
-# Meeseecs Box Quick Start Guide
+# mee6k Box Quick Start Guide
 
 ## 🚀 Getting Started
 
@@ -414,7 +414,7 @@ EOF
 echo -e "${GREEN}✅ Quick start guide created${NC}"
 
 echo ""
-echo -e "${GREEN}🎉 Meeseecs Box setup completed successfully!${NC}"
+echo -e "${GREEN}🎉 mee6k Box setup completed successfully!${NC}"
 echo ""
 echo -e "${BLUE}Next steps:${NC}"
 echo -e "${PURPLE}1. Run: ${ORANGE}./start.sh${NC} to start the platform"

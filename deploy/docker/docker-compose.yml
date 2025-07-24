@@ -4,10 +4,10 @@ services:
   # Database Services
   postgres:
     image: postgres:15-alpine
-    container_name: meeseecs-postgres
+    container_name: mee6k-postgres
     environment:
-      POSTGRES_DB: meeseecs_box
-      POSTGRES_USER: meeseecs
+      POSTGRES_DB: mee6k_box
+      POSTGRES_USER: mee6k
       POSTGRES_PASSWORD: secure_password_123
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -15,25 +15,25 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - meeseecs-network
+      - mee6k-network
 
   redis:
     image: redis:7-alpine
-    container_name: meeseecs-redis
+    container_name: mee6k-redis
     command: redis-server --requirepass redis_password_123
     ports:
       - "6379:6379"
     volumes:
       - redis_data:/data
     networks:
-      - meeseecs-network
+      - mee6k-network
 
   # Message Queue
   rabbitmq:
     image: rabbitmq:3-management-alpine
-    container_name: meeseecs-rabbitmq
+    container_name: mee6k-rabbitmq
     environment:
-      RABBITMQ_DEFAULT_USER: meeseecs
+      RABBITMQ_DEFAULT_USER: mee6k
       RABBITMQ_DEFAULT_PASS: rabbitmq_password_123
     ports:
       - "5672:5672"
@@ -41,18 +41,18 @@ services:
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
     networks:
-      - meeseecs-network
+      - mee6k-network
 
   # Core Services
   api-gateway:
     build:
       context: ../../api-gateway
       dockerfile: Dockerfile
-    container_name: meeseecs-api-gateway
+    container_name: mee6k-api-gateway
     environment:
-      - DATABASE_URL=postgres://meeseecs:secure_password_123@postgres:5432/meeseecs_box
+      - DATABASE_URL=postgres://mee6k:secure_password_123@postgres:5432/mee6k_box
       - REDIS_URL=redis://:redis_password_123@redis:6379
-      - RABBITMQ_URL=amqp://meeseecs:rabbitmq_password_123@rabbitmq:5672/
+      - RABBITMQ_URL=amqp://mee6k:rabbitmq_password_123@rabbitmq:5672/
     ports:
       - "8080:8080"
     depends_on:
@@ -61,18 +61,18 @@ services:
       - rabbitmq
     restart: unless-stopped
     networks:
-      - meeseecs-network
+      - mee6k-network
 
-  # Meeseecs-box Services
+  # mee6k-box Services
   runtime-guardian:
     build:
       context: ../../runtime-guardian
       dockerfile: Dockerfile
-    container_name: meeseecs-runtime-guardian
+    container_name: mee6k-runtime-guardian
     privileged: true
     environment:
       - API_GATEWAY_URL=http://api-gateway:8080
-      - RABBITMQ_URL=amqp://meeseecs:rabbitmq_password_123@rabbitmq:5672/
+      - RABBITMQ_URL=amqp://mee6k:rabbitmq_password_123@rabbitmq:5672/
     ports:
       - "8081:8081"
     volumes:
@@ -84,16 +84,16 @@ services:
       - rabbitmq
     restart: unless-stopped
     networks:
-      - meeseecs-network
+      - mee6k-network
 
   vuln-scanner:
     build:
       context: ../../vuln-scanner
       dockerfile: Dockerfile
-    container_name: meeseecs-vuln-scanner
+    container_name: mee6k-vuln-scanner
     environment:
       - API_GATEWAY_URL=http://api-gateway:8080
-      - RABBITMQ_URL=amqp://meeseecs:rabbitmq_password_123@rabbitmq:5672/
+      - RABBITMQ_URL=amqp://mee6k:rabbitmq_password_123@rabbitmq:5672/
     ports:
       - "8082:8082"
     volumes:
@@ -103,7 +103,7 @@ services:
       - rabbitmq
     restart: unless-stopped
     networks:
-      - meeseecs-network
+      - mee6k-network
 
 volumes:
   postgres_data:
@@ -111,5 +111,5 @@ volumes:
   rabbitmq_data:
 
 networks:
-  meeseecs-network:
+  mee6k-network:
     driver: bridge
