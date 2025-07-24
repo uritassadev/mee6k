@@ -35,7 +35,7 @@ Vulnerability Scanner Service:
 PostgreSQL Database:
   To connect to your database:
   kubectl port-forward --namespace {{ .Release.Namespace }} svc/{{ .Release.Name }}-postgresql 5432:5432
-  Then connect using: postgresql://meeseecs:secure_password_123@localhost:5432/meeseecs_box
+  Then connect using: postgresql://mee6k:secure_password_123@localhost:5432/mee6k_box
 {{- end }}
 
 {{- if .Values.redis.enabled }}
@@ -50,6 +50,6 @@ RabbitMQ Message Broker:
   To access the RabbitMQ management interface:
   kubectl port-forward --namespace {{ .Release.Namespace }} svc/{{ .Release.Name }}-rabbitmq 15672:15672
   Then visit: http://localhost:15672
-  Username: meeseecs
+  Username: mee6k
   Password: rabbitmq_password_123
 {{- end }}

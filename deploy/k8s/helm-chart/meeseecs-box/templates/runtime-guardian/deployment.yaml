@@ -2,15 +2,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "meeseecs-box.fullname" . }}-runtime-guardian
+  name: {{ include "mee6k-box.fullname" . }}-runtime-guardian
   labels:
-    {{- include "meeseecs-box.labels" . | nindent 4 }}
+    {{- include "mee6k-box.labels" . | nindent 4 }}
     app.kubernetes.io/component: runtime-guardian
 spec:
   replicas: {{ .Values.runtimeGuardian.replicaCount }}
   selector:
     matchLabels:
-      {{- include "meeseecs-box.selectorLabels" . | nindent 6 }}
+      {{- include "mee6k-box.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: runtime-guardian
   template:
     metadata:
@@ -19,13 +19,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "meeseecs-box.selectorLabels" . | nindent 8 }}
+        {{- include "mee6k-box.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: runtime-guardian
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ include "meeseecs-box.serviceAccountName" . }}
+      serviceAccountName: {{ include "mee6k-box.serviceAccountName" . }}
       {{- with .Values.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}

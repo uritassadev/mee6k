@@ -2,9 +2,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "meeseecs-box.fullname" . }}
+  name: {{ include "mee6k-box.fullname" . }}
   labels:
-    {{- include "meeseecs-box.labels" . | nindent 4 }}
+    {{- include "mee6k-box.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -35,7 +35,7 @@ spec:
             {{- end }}
             backend:
               service:
-                name: {{ include "meeseecs-box.fullname" $ }}-{{ .service | default "api-gateway" }}
+                name: {{ include "mee6k-box.fullname" $ }}-{{ .service | default "api-gateway" }}
                 port:
                   number: {{ .port | default $.Values.apiGateway.service.port }}
           {{- end }}

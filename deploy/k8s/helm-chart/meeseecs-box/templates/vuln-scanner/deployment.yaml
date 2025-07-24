@@ -2,15 +2,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "meeseecs-box.fullname" . }}-vuln-scanner
+  name: {{ include "mee6k-box.fullname" . }}-vuln-scanner
   labels:
-    {{- include "meeseecs-box.labels" . | nindent 4 }}
+    {{- include "mee6k-box.labels" . | nindent 4 }}
     app.kubernetes.io/component: vuln-scanner
 spec:
   replicas: {{ .Values.vulnScanner.replicaCount }}
   selector:
     matchLabels:
-      {{- include "meeseecs-box.selectorLabels" . | nindent 6 }}
+      {{- include "mee6k-box.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: vuln-scanner
   template:
     metadata:
@@ -19,13 +19,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "meeseecs-box.selectorLabels" . | nindent 8 }}
+        {{- include "mee6k-box.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: vuln-scanner
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ include "meeseecs-box.serviceAccountName" . }}
+      serviceAccountName: {{ include "mee6k-box.serviceAccountName" . }}
       {{- with .Values.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}

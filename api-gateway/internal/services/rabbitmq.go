@@ -24,7 +24,7 @@ type Message struct {
 func NewRabbitMQService() (*RabbitMQService, error) {
 	rabbitURL := os.Getenv("RABBITMQ_URL")
 	if rabbitURL == "" {
-		rabbitURL = "amqp://meeseecs:rabbitmq_password_123@localhost:5672/"
+		rabbitURL = "amqp://mee6k:rabbitmq_password_123@localhost:5672/"
 	}
 
 	conn, err := amqp.Dial(rabbitURL)
@@ -53,10 +53,10 @@ func NewRabbitMQService() (*RabbitMQService, error) {
 func (s *RabbitMQService) setupExchangesAndQueues() error {
 	// Declare exchanges
 	exchanges := []string{
-		"meeseecs.alerts",
-		"meeseecs.vulnerabilities",
-		"meeseecs.runtime",
-		"meeseecs.notifications",
+		"mee6k.alerts",
+		"mee6k.vulnerabilities",
+		"mee6k.runtime",
+		"mee6k.notifications",
 	}
 
 	for _, exchange := range exchanges {
@@ -76,12 +76,12 @@ func (s *RabbitMQService) setupExchangesAndQueues() error {
 
 	// Declare queues
 	queues := map[string]string{
-		"runtime.alerts":        "meeseecs.alerts",
-		"vulnerability.scans":   "meeseecs.vulnerabilities",
-		"runtime.events":        "meeseecs.runtime",
-		"notification.email":    "meeseecs.notifications",
-		"notification.slack":    "meeseecs.notifications",
-		"notification.webhook":  "meeseecs.notifications",
+		"runtime.alerts":        "mee6k.alerts",
+		"vulnerability.scans":   "mee6k.vulnerabilities",
+		"runtime.events":        "mee6k.runtime",
+		"notification.email":    "mee6k.notifications",
+		"notification.slack":    "mee6k.notifications",
+		"notification.webhook":  "mee6k.notifications",
 	}
 
 	for queueName, exchange := range queues {
@@ -120,7 +120,7 @@ func (s *RabbitMQService) PublishAlert(alert interface{}) error {
 		Source: "api-gateway",
 		Data:   alert,
 	}
-	return s.publish("meeseecs.alerts", "runtime.alerts", message)
+	return s.publish("mee6k.alerts", "runtime.alerts", message)
 }
 
 func (s *RabbitMQService) PublishVulnerability(vuln interface{}) error {
@@ -129,7 +129,7 @@ func (s *RabbitMQService) PublishVulnerability(vuln interface{}) error {
 		Source: "api-gateway",
 		Data:   vuln,
 	}
-	return s.publish("meeseecs.vulnerabilities", "vulnerability.scans", message)
+	return s.publish("mee6k.vulnerabilities", "vulnerability.scans", message)
 }
 
 func (s *RabbitMQService) PublishNotification(notificationType string, data interface{}) error {
@@ -140,7 +140,7 @@ func (s *RabbitMQService) PublishNotification(notificationType string, data inte
 	}
 	
 	routingKey := fmt.Sprintf("notification.%s", notificationType)
-	return s.publish("meeseecs.notifications", routingKey, message)
+	return s.publish("mee6k.notifications", routingKey, message)
 }
 
 func (s *RabbitMQService) PublishRuntimeEvent(event interface{}) error {
@@ -149,7 +149,7 @@ func (s *RabbitMQService) PublishRuntimeEvent(event interface{}) error {
 		Source: "api-gateway",
 		Data:   event,
 	}
-	return s.publish("meeseecs.runtime", "runtime.events", message)
+	return s.publish("mee6k.runtime", "runtime.events", message)
 }
 
 func (s *RabbitMQService) publish(exchange, routingKey string, message Message) error {

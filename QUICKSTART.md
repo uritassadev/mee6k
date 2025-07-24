@@ -1,4 +1,4 @@
-# Meeseecs Box Quick Start Guide
+# MEE6K Box Quick Start Guide
 
 ## 🚀 Getting Started
 

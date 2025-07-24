@@ -4,11 +4,11 @@ kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-postgresql-init
   labels:
-    {{- include "meeseecs-box.labels" . | nindent 4 }}
+    {{- include "mee6k-box.labels" . | nindent 4 }}
     app.kubernetes.io/component: postgresql-init
 data:
   01-init.sql: |-
-    -- Meeseecs Box Database Initialization
+    -- mee6k Box Database Initialization
     -- This script sets up the initial database structure and sample data
 
     -- Create extensions

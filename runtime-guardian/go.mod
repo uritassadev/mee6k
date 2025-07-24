@@ -1,4 +1,4 @@
-module meeseecs-box/runtime-guardian
+module mee6k-box/runtime-guardian
 
 go 1.23
 

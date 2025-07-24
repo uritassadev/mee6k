@@ -1,4 +1,4 @@
-module meeseecs-box/api-gateway
+module mee6k-box/api-gateway
 
 go 1.23
 

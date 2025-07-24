@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"time"
 
-	"meeseecs-box/api-gateway/internal/models"
-	"meeseecs-box/api-gateway/internal/services"
+	"mee6k-box/api-gateway/internal/models"
+	"mee6k-box/api-gateway/internal/services"
 
 	"github.com/gin-gonic/gin"
 )
@@ -29,7 +29,7 @@ func NewHandler(db *services.DatabaseService, redis *services.RedisService, rabb
 func (h *Handler) HealthCheck(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status":    "healthy",
-		"service":   "meeseecs-box-api-gateway",
+		"service":   "mee6k-box-api-gateway",
 		"version":   "1.0.0",
 		"timestamp": time.Now().UTC(),
 	})
@@ -60,7 +60,7 @@ func (h *Handler) GetDashboardStats(c *gin.Context) {
 func (h *Handler) GetSecurityOverview(c *gin.Context) {
 	overview := gin.H{
 		"platform": gin.H{
-			"name":    "Meeseecs Box",
+			"name":    "MEE6K Box",
 			"version": "1.0.0",
 			"status":  "operational",
 		},

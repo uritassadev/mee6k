@@ -1,4 +1,4 @@
-module meeseecs-box/vuln-scanner
+module mee6k-box/vuln-scanner
 
 go 1.23
 

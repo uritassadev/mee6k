@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "meeseecs-box.fullname" . }}-runtime-guardian
+  name: {{ include "mee6k-box.fullname" . }}-runtime-guardian
   labels:
-    {{- include "meeseecs-box.labels" . | nindent 4 }}
+    {{- include "mee6k-box.labels" . | nindent 4 }}
     app.kubernetes.io/component: runtime-guardian
 spec:
   type: {{ .Values.runtimeGuardian.service.type }}
@@ -14,6 +14,6 @@ spec:
       protocol: TCP
       name: http
   selector:
-    {{- include "meeseecs-box.selectorLabels" . | nindent 4 }}
+    {{- include "mee6k-box.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: runtime-guardian
 {{- end }}
