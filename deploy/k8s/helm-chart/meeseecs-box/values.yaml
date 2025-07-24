@@ -2,19 +2,17 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
-replicaCount: 1
+# Global settings
+global:
+  # Environment variables shared across all services
+  env:
+    # Database connection settings
+    DATABASE_URL: "postgres://meeseecs:secure_password_123@{{ .Release.Name }}-postgresql:5432/meeseecs_box"
+    # Redis connection settings
+    REDIS_URL: "redis://:redis_password_123@{{ .Release.Name }}-redis-master:6379"
+    # RabbitMQ connection settings
+    RABBITMQ_URL: "amqp://meeseecs:rabbitmq_password_123@{{ .Release.Name }}-rabbitmq:5672/"
 
-# This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
-image:
-  repository: ""
-  # This sets the pull policy for images.
-  pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
-
-# This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
-imagePullSecrets: []
 # This is to override the chart name.
 nameOverride: ""
 fullnameOverride: ""
@@ -32,12 +30,11 @@ serviceAccount:
   name: ""
 
 # This is for setting Kubernetes Annotations to a Pod.
-# For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
 podAnnotations: {}
 # This is for setting Kubernetes Labels to a Pod.
-# For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
 podLabels: {}
 
+# Common security context settings
 podSecurityContext: {}
   # fsGroup: 2000
 
@@ -49,13 +46,6 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-# This is for setting up a service more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/
-service:
-  # This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
-  type: ClusterIP
-  # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
-  port: 80
-
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
   enabled: false
@@ -64,56 +54,179 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: chart-example.local
+    - host: meeseecs-box.local
       paths:
         - path: /
           pathType: ImplementationSpecific
+          service: api-gateway
+          port: 8080
   tls: []
-  #  - secretName: chart-example-tls
+  #  - secretName: meeseecs-box-tls
   #    hosts:
-  #      - chart-example.local
+  #      - meeseecs-box.local
 
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+# API Gateway Service Configuration
+apiGateway:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: "meeseecs-box/api-gateway"
+    pullPolicy: IfNotPresent
+    tag: "latest"
+  service:
+    type: ClusterIP
+    port: 8080
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 8080
+    initialDelaySeconds: 30
+    periodSeconds: 10
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: 8080
+    initialDelaySeconds: 30
+    periodSeconds: 10
+  env: {}
+    # Add any service-specific environment variables here
 
-# This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
-livenessProbe: null
-readinessProbe: null
+# Runtime Guardian Service Configuration
+runtimeGuardian:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: "meeseecs-box/runtime-guardian"
+    pullPolicy: IfNotPresent
+    tag: "latest"
+  service:
+    type: ClusterIP
+    port: 8081
+  resources: {}
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 8081
+    initialDelaySeconds: 30
+    periodSeconds: 10
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: 8081
+    initialDelaySeconds: 30
+    periodSeconds: 10
+  # Special security context for runtime guardian
+  securityContext:
+    privileged: true
+  # Mount host volumes for runtime monitoring
+  volumes:
+    - name: docker-socket
+      hostPath:
+        path: /var/run/docker.sock
+        type: Socket
+    - name: host-proc
+      hostPath:
+        path: /proc
+        type: Directory
+    - name: host-sys
+      hostPath:
+        path: /sys
+        type: Directory
+  volumeMounts:
+    - name: docker-socket
+      mountPath: /var/run/docker.sock
+      readOnly: true
+    - name: host-proc
+      mountPath: /host/proc
+      readOnly: true
+    - name: host-sys
+      mountPath: /host/sys
+      readOnly: true
+  env:
+    API_GATEWAY_URL: "http://{{ .Release.Name }}-api-gateway:8080"
 
-# This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+# Vulnerability Scanner Service Configuration
+vulnScanner:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: "meeseecs-box/vuln-scanner"
+    pullPolicy: IfNotPresent
+    tag: "latest"
+  service:
+    type: ClusterIP
+    port: 8082
+  resources: {}
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 8082
+    initialDelaySeconds: 30
+    periodSeconds: 10
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: 8082
+    initialDelaySeconds: 30
+    periodSeconds: 10
+  # Mount docker socket for scanning containers
+  volumes:
+    - name: docker-socket
+      hostPath:
+        path: /var/run/docker.sock
+        type: Socket
+  volumeMounts:
+    - name: docker-socket
+      mountPath: /var/run/docker.sock
+      readOnly: true
+  env:
+    API_GATEWAY_URL: "http://{{ .Release.Name }}-api-gateway:8080"
 
-# Additional volumes on the output Deployment definition.
-volumes: []
-# - name: foo
-#   secret:
-#     secretName: mysecret
-#     optional: false
+# PostgreSQL Dependency Configuration
+postgresql:
+  enabled: true
+  auth:
+    username: "meeseecs"
+    password: "secure_password_123"
+    database: "meeseecs_box"
+  primary:
+    initdb:
+      scriptsConfigMap: "{{ .Release.Name }}-postgresql-init"
+    persistence:
+      enabled: true
+      size: 1Gi
 
-# Additional volumeMounts on the output Deployment definition.
-volumeMounts: []
-# - name: foo
-#   mountPath: "/etc/foo"
-#   readOnly: true
+# Redis Dependency Configuration
+redis:
+  enabled: true
+  auth:
+    password: "redis_password_123"
+  master:
+    persistence:
+      enabled: true
+      size: 1Gi
 
+# RabbitMQ Dependency Configuration
+rabbitmq:
+  enabled: true
+  auth:
+    username: "meeseecs"
+    password: "rabbitmq_password_123"
+  persistence:
+    enabled: true
+    size: 1Gi
+
+# Common settings
 nodeSelector: {}
-
 tolerations: []
-
 affinity: {}
 
+# Extra objects to deploy with the release
 extraObject: []

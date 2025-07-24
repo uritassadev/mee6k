@@ -35,9 +35,9 @@ spec:
             {{- end }}
             backend:
               service:
-                name: {{ include "meeseecs-box.fullname" $ }}
+                name: {{ include "meeseecs-box.fullname" $ }}-{{ .service | default "api-gateway" }}
                 port:
-                  number: {{ $.Values.service.port }}
+                  number: {{ .port | default $.Values.apiGateway.service.port }}
           {{- end }}
     {{- end }}
 {{- end }}

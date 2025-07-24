@@ -1,0 +1,19 @@
+{{- if .Values.postgresql.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-postgresql-init
+  labels:
+    {{- include "meeseecs-box.labels" . | nindent 4 }}
+    app.kubernetes.io/component: postgresql-init
+data:
+  01-init.sql: |-
+    -- Meeseecs Box Database Initialization
+    -- This script sets up the initial database structure and sample data
+
+    -- Create extensions
+    CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+    -- Note: Tables will be created by GORM auto-migration
+    -- Sample data will be inserted by the application after tables are created
+{{- end }}

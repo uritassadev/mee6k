@@ -1,0 +1,19 @@
+{{- if .Values.apiGateway.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "meeseecs-box.fullname" . }}-api-gateway
+  labels:
+    {{- include "meeseecs-box.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api-gateway
+spec:
+  type: {{ .Values.apiGateway.service.type }}
+  ports:
+    - port: {{ .Values.apiGateway.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "meeseecs-box.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: api-gateway
+{{- end }}
