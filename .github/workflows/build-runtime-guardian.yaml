@@ -23,7 +23,7 @@ env:
   SA: "cicd-sa@ictbit-labs-465111.iam.gserviceaccount.com"
   REGION: "us-central1"
   GKE_ZONE: "us-central1-a"
-  REPOSITORY: "mee6k-box"
+  REPOSITORY: "mee6k"
   GKE_CLUSTER: "ictbit-labs"
 jobs:
   build-and-push:
